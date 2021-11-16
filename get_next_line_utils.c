@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-void	*ft_memchr(const void *s, int c, size_t n)
+int ft_memchr(const void *s, int c, size_t n)
 {
 	unsigned char	*str;
 	size_t			i;
@@ -24,31 +24,26 @@ void	*ft_memchr(const void *s, int c, size_t n)
 	while (i < n)
 	{
 		if (*str == character)
-			return (str);
+			return (i);
 		i++;
 		str++;
 	}
-	return (NULL);
+	return (-1);
 }
 
 void	*ft_memmove(void *dst, const void *src, size_t len)
 {
 	char		*dst_str;
 	char		*src_str;	
-	size_t		count;
 
 	if (src == dst)
 		return (dst);
-	count = -1;
+
 	dst_str = (char *)dst;
 	src_str = (char *)src;
-	if (src < dst)
-	{
-		while (len--)
-			*(dst_str + len) = *(src_str + len);
-		return (dst);
-	}
+
 	while (len--)
 		*dst_str++ = *src_str++;
+
 	return (dst);
 }
