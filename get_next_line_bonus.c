@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
@@ -63,17 +63,11 @@ int	change_r(char *buffer, char **r, size_t *filled)
 	}
 	return (1);
 }
-/*
-[buffer]abcp[nl]12345678
-buffer[] = 0;
-
-*/
 
 char	*get_next_line(int fd)
 {
-	static char		buffer[BUFFER_SIZE];
+	static t_stat	stat;
 	ssize_t			n;
-	static size_t	filled;
 	char			*r;
 
 	if (fd < 0 || fd > FOPEN_MAX)
@@ -81,13 +75,14 @@ char	*get_next_line(int fd)
 	r = 0;
 	while (1)
 	{
-		n = read(fd, buffer + filled, BUFFER_SIZE - filled);
-		filled += n;
-		if (n == 0 && filled == 0)
+		n = read(fd, stat.buffer[fd] + stat.filled[fd],
+				BUFFER_SIZE - stat.filled[fd]);
+		stat.filled[fd] += n;
+		if (n == 0 && stat.filled[fd] == 0)
 			return (r);
-		if (n == -1 || !change_r(buffer, &r, &filled))
+		if (n == -1 || !change_r(stat.buffer[fd], &r, &stat.filled[fd]))
 		{
-			filled = 0;
+			stat.filled[fd] = 0;
 			free(r);
 			return (0);
 		}
